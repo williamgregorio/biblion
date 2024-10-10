@@ -12,8 +12,8 @@ type Page struct {
   Body []byte
 }
 
-func (p *Page) save() err {
-  filename := p.title + ".txt"
+func (p *Page) save() error {
+  filename := p.Title + ".txt"
   err := os.WriteFile(filename, p.Body, 0600)
   if err != nil {
     fmt.Errorf("failed to save page: %w",err)
@@ -41,6 +41,6 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main()  {
-  http.HandleFunc("/", handler)
+  http.HandleFunc("/", viewHandler)
   log.Fatal(http.ListenAndServe(":8000", nil))
 }
