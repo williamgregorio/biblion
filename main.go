@@ -8,6 +8,8 @@ import (
   "html/template"
 )
 
+var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+
 type Page struct {
   Title string
   Body []byte
