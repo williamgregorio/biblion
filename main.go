@@ -37,7 +37,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
     http.Error(w, "Page not found", http.StatusNotFound)
     return
   }
-  fmt.Fprintf(w, "<h1>%s</h1><p>%s</p>", p.title, p.body)
+  fmt.Fprintf(w, "<h1>%s</h1><p>%s</p>", p.Title, p.Body)
 }
 
 func main()  {
