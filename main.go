@@ -14,8 +14,15 @@ type Page struct {
 
 func (p *Page) save() err {
   filename := p.title + ".txt"
-  return os.Writefile(filename, p.Body, 0600)
+  err := os.WriteFile(filename, p.Body, 0600)
+  if err != nil {
+    fmt.Errorf("failed to save page: %w",err)
+  }
+  return nil
+
 }
+
+func loadPage() {}
 
 func handler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Biblion %s", r.URL.Path)
