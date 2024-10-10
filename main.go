@@ -10,6 +10,7 @@ import (
 )
 
 var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 type Page struct {
   Title string
@@ -41,6 +42,8 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
     return
   }
 }
+
+func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {}
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
   title := r.URL.Path[len("/view/"):]
