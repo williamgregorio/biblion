@@ -73,11 +73,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
   renderTemplate(w, "view", p)
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request) {
-  title, err := getTitle(w, r)
-  if err != nil {
-    return
-  }
+func editHandler(w http.ResponseWriter, r *http.Request, title string) {
   p, err := loadPage(title)
   if err != nil {
     p = &Page{Title: title}
@@ -85,14 +81,10 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
   renderTemplate(w, "edit", p)
 }
 
-func saveHandler(w http.ResponseWriter, r *http.Request) {
-  title, err := getTitle(w, r)
-  if err != nil {
-    return
-  }
+func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
   body := r.FormValue("body")
   p := &Page{Title: title, Body: []byte(body)}
-  err = p.save()
+  err := p.save()
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
