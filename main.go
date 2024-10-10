@@ -5,6 +5,7 @@ import (
   "log"
   "os"
   "net/http"
+  "html/template"
 )
 
 type Page struct {
@@ -40,7 +41,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "<h1>%s</h1><p>%s</p>", p.Title, p.Body)
 }
 
-func editHandler(w http.ResponseWrite, r *http.Request) {
+func editHandler(w http.ResponseWriter, r *http.Request) {
   title := r.URL.Path[len("/edit/"):]
   p, err := loadPage(title)
   if err != nil {
