@@ -30,8 +30,14 @@ func loadPage(title string) (*Page, error) {
   return &Page{Title: title, Body: body}, nil
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "Biblion %s", r.URL.Path)
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+  title := r.URL.Path[len("/view/"):]
+  p, err := loadPage(title)
+  if err != nil {
+    http.Error(w, "Page not found", http.StatusNotFound)
+    return
+  }
+  fmt.Fprintf(w, "<h1>%s</h1><p>%s</p>", p.title, p.body)
 }
 
 func main()  {
