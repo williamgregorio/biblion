@@ -19,10 +19,16 @@ func (p *Page) save() err {
     fmt.Errorf("failed to save page: %w",err)
   }
   return nil
-
 }
 
-func loadPage() {}
+func loadPage(title string) (*Page, error) {
+  filename := title + ".txt"
+  body, err := os.ReadFile(filename)
+  if err != nil {
+    return nil, err
+  }
+  return &Page{Title: title, Body: body}, nil
+}
 
 func handler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Biblion %s", r.URL.Path)
