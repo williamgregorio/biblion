@@ -7,6 +7,7 @@ import (
   "net/http"
   "html/template"
   "regexp"
+  "errors"
 )
 
 var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
