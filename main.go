@@ -40,8 +40,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
   title := r.URL.Path[len("/view/"):]
   p, err := loadPage(title)
   if err != nil {
-    http.Error(w, "Page not found", http.StatusNotFound)
-    return
+    p = &Page{Title: title}
   }
   renderTemplate(w, "view", p)
 }
