@@ -64,11 +64,7 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
   return m[2], nil
 }
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
-  title, err := getTitle(w, r)
-  if err != nil { 
-    return
-  }
+func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
   p, err := loadPage(title)
   if err != nil {
     http.Redirect(w, r, "/edit/"+title, http.StatusFound)
@@ -105,8 +101,8 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main()  {
-  http.HandleFunc("/view/", viewHandler)
-  http.HandleFunc("/edit/", editHandler)
-  http.HandleFunc("/save/", saveHandler)
+  http.HandleFunc("/view/", makeHandler(viewHandler))
+  http.HandleFunc("/edit/", makeHandler(editHandler))
+  http.HandleFunc("/save/", makeHandler(saveHandler))
   log.Fatal(http.ListenAndServe(":8000", nil))
 }
