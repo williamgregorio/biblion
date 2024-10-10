@@ -5,7 +5,12 @@ import (
   "log"
   "os"
   "net/http"
+  "html/template"
+  "regexp"
 )
+
+var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 type Page struct {
   Title string
@@ -30,17 +35,50 @@ func loadPage(title string) (*Page, error) {
   return &Page{Title: title, Body: body}, nil
 }
 
+func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+  err := templates.ExecuteTemplate(w, tmpl+".html", p)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+}
+
+func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {}
+
 func viewHandler(w http.ResponseWriter, r *http.Request) {
   title := r.URL.Path[len("/view/"):]
   p, err := loadPage(title)
   if err != nil {
-    http.Error(w, "Page not found", http.StatusNotFound)
+    http.Redirect(w, r, "/edit/"+title, http.StatusFound)
     return
   }
-  fmt.Fprintf(w, "<h1>%s</h1><p>%s</p>", p.Title, p.Body)
+  renderTemplate(w, "view", p)
+}
+
+func editHandler(w http.ResponseWriter, r *http.Request) {
+  title := r.URL.Path[len("/edit/"):]
+  p, err := loadPage(title)
+  if err != nil {
+    p = &Page{Title: title}
+  }
+  renderTemplate(w, "edit", p)
+}
+
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+  title := r.URL.Path[len("/save/"):]
+  body := r.FormValue("body")
+  p := &Page{Title: title, Body: []byte(body)}
+  err := p.save()
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+  http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 
 func main()  {
   http.HandleFunc("/view/", viewHandler)
+  http.HandleFunc("/edit/", editHandler)
+  http.HandleFunc("/save/", saveHandler)
   log.Fatal(http.ListenAndServe(":8000", nil))
 }
