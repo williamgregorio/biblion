@@ -32,7 +32,7 @@ func loadPage(title string) (*Page, error) {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-  t, _ := template.ParseFiles(tmp + ".html")
+  t, _ := template.ParseFiles(tmpl + ".html")
   t.Execute(w, p)
 }
 
