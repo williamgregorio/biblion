@@ -42,5 +42,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 func main()  {
   http.HandleFunc("/view/", viewHandler)
+  http.HandleFunc("/edit/", viewHandler)
+  http.HandleFunc("/save/", viewHandler)
   log.Fatal(http.ListenAndServe(":8000", nil))
 }
