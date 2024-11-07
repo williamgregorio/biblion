@@ -31,6 +31,13 @@ type Bible struct {
 
 func loadBookNames(filename string) ([]string, error) {
   data, err := ioutil.ReadFile(filename)
+  if err != nil {
+    // use a proper message later
+    return nil, err
+  }
+  var bookNames []string
+  err = json.Unmarshal(data, &bookNames)
+  return bookNames, err
 }
 
 func main() {
