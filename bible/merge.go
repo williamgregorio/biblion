@@ -41,5 +41,8 @@ func loadBookNames(filename string) ([]string, error) {
 }
 
 func main() {
-
+  bookNames, err := loadBookNames("Books.json")
+  if err != nil {
+    log.Fatal("Failed to load Books.json: %v", err)
+  }
 }
