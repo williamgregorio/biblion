@@ -63,11 +63,12 @@ func main() {
   }
   
   var bible Bible 
+  fmt.Println(bookNames)
 
   for _, bookName := range bookNames {
     // filenames must be reduced on space since this is the shape of Books.json
     fileName := strings.ReplaceAll(bookName, " ", "") + ".json"
-    filePath := filepath.Join("bible", fileName)
+    filePath := filepath.Join("", fileName)
 
     book, err := loadBookData(filePath)
     if err != nil {
