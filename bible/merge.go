@@ -5,7 +5,6 @@ import (
   "fmt"
   "io/ioutil"
   "log"
-  "os"
   "path/filepath"
   "strings"
 )
@@ -62,4 +61,26 @@ func main() {
   if err != nil {
     log.Fatal("Failed to load Books.json: %v", err)
   }
+  
+  var bible Bible 
+
+  for _, bookName := range bookNames {
+    // filenames must be reduced on space since this is the shape of Books.json
+    fileName := strings.ReplaceAll(bookName, " ", "") + ".json"
+    filePath := filepath.Join("bible", fileName)
+
+    book, err := loadBookData(filePath)
+    if err != nil {
+      log.Printf("Error: Could not load %s: %v", filePath, err)
+      continue
+    }
+    bible.Books = append(bible.Books, *book)
+  }
+
+  err = saveBibleData("Bible.json", &bible)
+  if err != nil {
+    log.Fatal("Failed to save at Bible.json: %v", err)
+  }
+  
+  fmt.Println("Successfully merged all books into Bible.json")
 }
