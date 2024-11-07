@@ -32,12 +32,29 @@ type Bible struct {
 func loadBookNames(filename string) ([]string, error) {
   data, err := ioutil.ReadFile(filename)
   if err != nil {
-    // use a proper message later
     return nil, err
   }
   var bookNames []string
   err = json.Unmarshal(data, &bookNames)
   return bookNames, err
+}
+
+func loadBookData(filename string) (*Book, error) {
+  data, err := ioutil.ReadFile(filename)
+  if err != nil {
+    return nil, err
+  }
+  var book Book
+  err = json.Unmarshal(data, &book)
+  return &book, err
+}
+
+func saveBibleData(filename string, bible *Bible) error {
+  data, err := json.MarshalIndent(bible, "", "  ")
+  if err != nil {
+    return err
+  }
+  return ioutil.WriteFile(filename, data, 0644)
 }
 
 func main() {
