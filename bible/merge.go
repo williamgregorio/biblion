@@ -29,6 +29,10 @@ type Bible struct {
   Books []Book `json:"books"`
 }
 
+func loadBookNames(filename string) ([]string, error) {
+  data, err := ioutil.ReadFile(filename)
+}
+
 func main() {
 
 }
