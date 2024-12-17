@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 type Library struct {
@@ -33,12 +34,12 @@ func handleAnotherRoute(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/get", handleAnotherRoute)
-
-	fmt.Println("Server starting on port :7070")
-	err := http.ListenAndServe(":7070", nil)
+	file, err := os.Open("./bible/Bible.json")
 	if err != nil {
-		fmt.Println("Server failed to start:", err)
+		fmt.Errorf("error opening file:", err)
+		return
 	}
+
+	fmt.Println(file)
+	defer file.Close()
 }
