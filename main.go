@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/a-h/templ"
 )
 
 type Bible struct {
@@ -80,4 +82,9 @@ func main() {
 		fmt.Printf("verse not found: %s %s:%s\n", bookName, chapter, verse)
 	}
 
+	component := hello("Biblion")
+	http.Handle("/", templ.Handler(component))
+
+	fmt.Println("listening on :7000")
+	http.ListenAndServe(":7000", nil)
 }
