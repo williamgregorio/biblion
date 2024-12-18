@@ -31,6 +31,23 @@ func handleRoot(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "Biblion")
 }
 
+func getVerse(bible Bible, bookName, chapter, verse string) (string, bool) {
+	for _, book := range bible.Books {
+		if book.Book == bookName {
+			for _, chap := range book.Chapters {
+				if chap.Chapter == chapter {
+					for _, text := range chap.Verses {
+						if text.Verse == verse {
+							return text.Text, true
+						}
+					}
+				}
+			}
+		}
+	}
+	return "", false
+}
+
 func main() {
 	file, err := os.Open("./bible/Bible.json")
 	if err != nil {
@@ -39,7 +56,7 @@ func main() {
 	}
 	defer file.Close()
 
-	byteVal, err := io.ReadAll(file)
+	byteValue, err := io.ReadAll(file)
 	if err != nil {
 		fmt.Errorf("filed to read file:", err)
 		return
@@ -47,25 +64,20 @@ func main() {
 
 	var bible Bible
 
-	if err := json.Unmarshal(byteVal, &bible); err != nil {
+	if err := json.Unmarshal(byteValue, &bible); err != nil {
 		fmt.Errorf("failed to parse JSON:", err)
 		return
 	}
 
-	for _, book := range bible.Books {
-		if book.Book == "John" {
-			for _, chapter := range book.Chapters {
-				if chapter.Chapter == "3" {
-					for _, verse := range chapter.Verses {
-						if verse.Verse == "16" {
-							fmt.Println("Book:", book.Book)
-							fmt.Println("Chapter:", chapter.Chapter)
-							fmt.Println("Verse:", verse.Verse)
-							fmt.Println("Text:", verse.Text)
-						}
-					}
-				}
-			}
-		}
+	bookName := "Genesis"
+	chapter := "1"
+	verse := "1"
+
+	text, found := getVerse(bible, bookName, chapter, verse)
+	if found {
+		fmt.Printf("%s %s:%s - %s\n", bookName, chapter, verse, text)
+	} else {
+		fmt.Printf("verse not found: %s %s:%s\n", bookName, chapter, verse)
 	}
+
 }
