@@ -28,7 +28,7 @@ type Verse struct {
 }
 
 func handleRoot(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "Biblion")
+	fmt.Fprintln(w, "Biblion")
 }
 
 func getVerse(bible Bible, bookName, chapter, verse string) (string, bool) {
@@ -51,27 +51,27 @@ func getVerse(bible Bible, bookName, chapter, verse string) (string, bool) {
 func main() {
 	file, err := os.Open("./bible/Bible.json")
 	if err != nil {
-		fmt.Errorf("error opening file:", err)
+		fmt.Printf("error opening file: %s", err)
 		return
 	}
 	defer file.Close()
 
 	byteValue, err := io.ReadAll(file)
 	if err != nil {
-		fmt.Errorf("filed to read file:", err)
+		fmt.Printf("failed to read file: %s", err)
 		return
 	}
 
 	var bible Bible
 
 	if err := json.Unmarshal(byteValue, &bible); err != nil {
-		fmt.Errorf("failed to parse JSON:", err)
+		fmt.Printf("failed to parse JSON: %s", err)
 		return
 	}
 
-	bookName := "Genesis"
-	chapter := "1"
-	verse := "1"
+	bookName := "John"
+	chapter := "3"
+	verse := "16"
 
 	text, found := getVerse(bible, bookName, chapter, verse)
 	if found {
