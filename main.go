@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
 
-type Library struct {
+type Bible struct {
 	Books []Book `json:"books"`
 }
 
@@ -30,7 +32,7 @@ func handleRoot(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleAnotherRoute(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "Another router but with this string")
+	fmt.Fprintf(w, "another router but with this string")
 }
 
 func main() {
@@ -39,7 +41,20 @@ func main() {
 		fmt.Errorf("error opening file:", err)
 		return
 	}
-
-	fmt.Println(file)
 	defer file.Close()
+
+	byteVal, err := io.ReadAll(file)
+	if err != nil {
+		fmt.Errorf("filed to read file:", err)
+		return
+	}
+
+	var bible Bible
+
+	if err := json.Unmarshal(byteVal, &bible); err != nil {
+		fmt.Errorf("failed to parse JSON:", err)
+		return
+	}
+
+	fmt.Println(bible)
 }
